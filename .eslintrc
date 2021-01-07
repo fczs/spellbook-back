@@ -1,0 +1,12 @@
+{
+  "plugins": ["lit"],
+  "rules": {
+    "lit/rule-name": "error",
+    "indent": ["error", 2],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "no-console": "off"
+  },
+  "extends": ["plugin:lit/recommended"],
+  "env": {"browser": true}
+}
