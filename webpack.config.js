@@ -4,34 +4,28 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 module.exports = (env, argv) => ({
   mode: 'development',
   entry: {
-    spellbook: './src/index.ts'
+    spellbook: './src/index.ts',
   },
   devServer: {
     contentBase: path.join(__dirname, 'build'),
-    historyApiFallback: true
+    historyApiFallback: true,
   },
-  plugins: [
-    new CleanWebpackPlugin(),
-  ],
+  plugins: [new CleanWebpackPlugin()],
   output: {
     filename: 'app.js',
-    path: path.resolve(__dirname, 'build')
+    path: path.resolve(__dirname, 'build'),
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         use: 'ts-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
       },
-    ]
+    ],
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
+    fallback: { path: false },
   },
-  node: {
-    fs: 'empty',
-    path: 'empty',
-    net: 'empty'
-  }
 });
