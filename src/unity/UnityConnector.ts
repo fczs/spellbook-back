@@ -1,14 +1,32 @@
-import net from 'net';
+import * as net from 'net';
+import { connect } from '../config/Config';
 
 class UnityConnector implements Connector {
-  private host?: string;
-  private port?: string;
+  private host?: string = connect.host;
+  private port?: string = connect.port;
+
+  private buffer: string = '';
+  private stack: number = 0;
+
+  private client;
 
   constructor() {
-    this.host = process.env.REACT_APP_UNITY_HOST;
-    this.port = process.env.REACT_APP_UNITY_PORT;
+    this.client = new net.Socket();
 
-    console.log(this.host, this.port);
+    if (this.host && this.port) {
+      this.connect(this.host, parseInt(this.port));
+    } else {
+      throw new Error('Connect parameters are undefined.');
+    }
+  }
+
+  private connect(host: string, port: number) {
+    console.log(`Connecting to ${host}: ${port}...`);
+
+    this.client.connect(port, host, () => {
+      console.log('Socket connected.');
+      this.client.write(JSON.stringify({ type: 'SUBSCRIBE' }));
+    });
   }
 }
 
