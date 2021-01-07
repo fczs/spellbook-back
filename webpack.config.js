@@ -29,4 +29,9 @@ module.exports = (env, argv) => ({
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
+  node: {
+    fs: 'empty',
+    path: 'empty',
+    net: 'empty'
+  }
 });

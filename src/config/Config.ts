@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '../../.env'});
 
-const connect: StringObject = {
+const connect: EnvObject = {
   host: process.env.HOST,
   port: process.env.PORT
 }
