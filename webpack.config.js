@@ -1,31 +1,20 @@
 const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-module.exports = (env, argv) => ({
+module.exports = {
   mode: 'development',
-  entry: {
-    spellbook: './src/index.ts',
-  },
-  devServer: {
-    contentBase: path.join(__dirname, 'build'),
-    historyApiFallback: true,
-  },
-  plugins: [new CleanWebpackPlugin()],
+  target: 'node',
+  entry: './src/index.ts',
   output: {
     filename: 'app.js',
-    path: path.resolve(__dirname, 'build'),
-  },
-  module: {
-    rules: [
-      {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
-        exclude: /node_modules/,
-      },
-    ],
+    path: path.resolve(__dirname, 'dist'),
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
-    fallback: { path: false },
+    extensions: ['.webpack.js', '.web.js', '.ts', '.js'],
+    fallback: {
+      path: false,
+    },
   },
-});
+  module: {
+    rules: [{ test: /\.ts$/, loader: 'ts-loader' }],
+  },
+};

@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 
-dotenv.config({ path: '../../.env'});
+dotenv.config();
 
 const connect: EnvObject = {
   host: process.env.HOST,

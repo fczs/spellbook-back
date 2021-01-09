@@ -1,0 +1,14 @@
+{
+  "username": "username",
+  "password": "password",
+  "uri": "https://feed.url",
+  "bookFilter": null,
+  "oddTypeFilter": null,
+  "sportFilter": null,
+  "ttlConfig": {
+    "livettl": "60000",
+    "todayttl": "180000",
+    "earlyttl": "180000",
+    "enableTtl": true
+  }
+}
