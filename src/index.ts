@@ -1,32 +1,16 @@
-import UnityClient from './unity/UnityClient';
+import { writeFileSync } from 'fs';
+import DataCollector from './data/DataCollector';
+import UnityFeed from './unity/UnityFeed';
+import { error } from './utils/Utils';
 
-const unity = new UnityClient();
+const client = new UnityFeed();
+const collection = new DataCollector(client);
 
-let buffer = '';
-let stack = 0;
+collection.fetch()
+.then(buffer => collection.parse(buffer))
+.then(chunk => {
+  writeFileSync('./feed/types.txt', chunk.type + '\n', { flag: 'a+' });
 
-unity.client.on('data', data => {
-  for (var i = 0, len = data.length; i < len; i++) {
-		let symb = String.fromCodePoint(data[i]);
-
-    if (symb === '{') {
-			stack++;
-		} else if (symb === '}') {
-			stack--;
-    }
-
-		buffer = buffer + symb;
-
-    if (stack <= 0) {
-			processMessage(buffer);
-			buffer = '';
-		}
-	}
-});
-
-function processMessage(msg: string) {
-	console.log(`Received Msg: ${msg}`);
-
-	// Process the feed messages here
-	// var payload = JSON.parse(msg);
-}
+  writeFileSync('./feed/feed.json', JSON.stringify(chunk, null, 2), { flag: 'a+' });
+})
+.catch(error);
