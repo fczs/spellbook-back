@@ -10,23 +10,25 @@ class UnityFeed extends Socket {
     super();
 
     if (this.host && this.port) {
-      console.log(`Connecting to ${this.host}:${this.port} ...`);
-      this.connect(parseInt(this.port), this.host, () => {
-        console.log('Socket connected');
-      });
+      this.start(parseInt(this.port), this.host);
     } else {
-      error('Connect parameters are not defined');
+      error('Connect parameters are not defined.');
     }
   }
 
-  public start(): void {
-    this.write(JSON.stringify({ type: 'SUBSCRIBE' }));
-    console.log('Fetching the feed...');
+  public start(port: number, host: string): void {
+    console.log(`Connecting to ${this.host}:${this.port} ...`);
+    this.connect(port, host, () => {
+      console.log('Socket connected');
+      this.write(JSON.stringify({ type: 'SUBSCRIBE' }));
+      console.log('Fetching the feed...');
+    });
   }
 
   public stop(): void {
-    this.write(JSON.stringify({ type: 'UNSUBSCRIBE' }));
     console.log('Connection closed');
+    this.write(JSON.stringify({ type: 'UNSUBSCRIBE' }));
+    this.end();
   }
 }
 

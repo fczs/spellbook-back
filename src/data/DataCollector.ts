@@ -1,31 +1,20 @@
-import * as fs from 'fs';
+import { writeFileSync } from 'fs';
 import UnityFeed from '../unity/UnityFeed';
 
 class DataCollector {
-  client: UnityFeed;
+  private client: UnityFeed;
 
   constructor(client: UnityFeed) {
     this.client = client;
+    this.initClientListener();
   }
 
-  fetch(): Promise<Buffer> {
-    return new Promise((resolve, reject) => {
-      this.client.on('data', (data: Buffer) => {
-        if (data.length > 0) {
-          resolve(data);
-        } else {
-          reject('Feed is empty');
-        }
-      });
-    });
-  }
-
-  parse(buffer: Buffer): Promise<FeedChunk> {
+  private initClientListener(): void {
     let chunk: string = '';
     let stack: number = 0;
 
-    return new Promise(resolve => {
-      for (var i = 0, len = buffer.length; i < len; i++) {
+    this.client.on('data', (buffer: Buffer) => {
+      for (let i = 0, len = buffer.length; i < len; i++) {
         let symb = String.fromCodePoint(buffer[i]);
 
         if (symb === '{') {
@@ -37,9 +26,16 @@ class DataCollector {
         chunk += symb;
 
         if (stack <= 0) {
-          resolve(JSON.parse(chunk));
+          this.fileStorage(JSON.parse(chunk));
+          chunk = '';
         }
       }
+    });
+  }
+
+  private fileStorage(chunk: FeedChunk): void {
+    writeFileSync('./feed/feed.json', JSON.stringify(chunk, null, 2), {
+      flag: 'a+',
     });
   }
 }
