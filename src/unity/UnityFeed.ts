@@ -1,10 +1,10 @@
 import { Socket } from 'net';
-import { connect } from '../config/Config';
+import { unity } from '../config/Config';
 import { error } from '../utils/Utils';
 
 class UnityFeed extends Socket {
-  private host?: string = connect.host;
-  private port?: string = connect.port;
+  private host?: string = unity.host;
+  private port?: string = unity.port;
 
   constructor() {
     super();

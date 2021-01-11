@@ -1,4 +1,3 @@
-import { writeFileSync } from 'fs';
 import UnityFeed from '../unity/UnityFeed';
 
 class DataCollector {
@@ -6,10 +5,9 @@ class DataCollector {
 
   constructor(client: UnityFeed) {
     this.client = client;
-    this.initClientListener();
   }
 
-  private initClientListener(): void {
+  public fetch(saveChunk: feedStorage): void {
     let chunk: string = '';
     let stack: number = 0;
 
@@ -26,16 +24,10 @@ class DataCollector {
         chunk += symb;
 
         if (stack <= 0) {
-          this.fileStorage(JSON.parse(chunk));
+          saveChunk(JSON.parse(chunk));
           chunk = '';
         }
       }
-    });
-  }
-
-  private fileStorage(chunk: FeedChunk): void {
-    writeFileSync('./feed/feed.json', JSON.stringify(chunk, null, 2), {
-      flag: 'a+',
     });
   }
 }

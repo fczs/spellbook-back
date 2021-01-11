@@ -7,3 +7,7 @@ type FeedList = {
 interface FeedChunk extends FeedList {
   type: string
 }
+
+interface feedStorage {
+  (chunk: FeedChunk): void
+}
