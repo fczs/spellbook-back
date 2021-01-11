@@ -11,6 +11,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-feed-connector/conf/libSportConfig.json
-feed-connector/examples/
-feed-connector/logs/
+conf/libSportConfig.json
+examples/
+logs/
