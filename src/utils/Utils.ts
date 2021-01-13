@@ -1,8 +1,8 @@
-function error(message: string): void {
+export function error(message: string): void {
   throw new Error(`\x1b[31mERR >>>\x1b[0m ${message}`);
 }
 
-function checkJson(str: string): boolean {
+export function checkJson(str: string): boolean {
   return /^[\],:{}\s]*$/.test(
     str
       .replace(/\\["\\\/bfnrtu]/g, '@')
@@ -13,5 +13,3 @@ function checkJson(str: string): boolean {
       .replace(/(?:^|:|,)(?:\s*\[)+/g, '')
   );
 }
-
-export { error, checkJson };

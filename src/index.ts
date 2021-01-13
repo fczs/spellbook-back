@@ -1,22 +1,16 @@
-import { writeFileSync } from 'fs';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 
 import db from './connectors/MongoConnector';
-
 import DataCollector from './data/DataCollector';
-
 import { app as conf } from './config/Config';
+import { chunkHandler } from './controllers/SportbookStorage';
 
 const app = express();
 const collector = new DataCollector();
 
-collector.fetch(/*(chunk) => {
-  writeFileSync('./feed/feed.json', JSON.stringify(chunk, null, 2), {
-    flag: 'a+',
-  });
-}*/);
+collector.fetch(chunkHandler);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());

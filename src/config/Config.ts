@@ -3,7 +3,9 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 const app: EnvObject = {
-  port: process.env.PORT
+  port: process.env.PORT,
+  root: process.env.PWD,
+  logs: process.env.PWD + '/logs/'
 }
 
 const unity: EnvObject = {

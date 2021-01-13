@@ -1,9 +1,12 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface IMatch extends Omit<UMatch, 'id'>, Document {}
+export interface IMatch extends Omit<UMatch, 'id'>, Document {
+  unity_id: string;
+}
 
 const Match: Schema = new Schema(
   {
+    unity_id: { type: String, required: true, unique: true },
     sportType: { type: String, required: true },
     startTime: { type: String, required: true },
     league: { type: String, required: false },

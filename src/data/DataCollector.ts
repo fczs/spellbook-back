@@ -1,5 +1,4 @@
 import UnityFeed from '../connectors/UnityFeed';
-import { matchInsert } from '../controllers/SportbookStorage';
 
 class DataCollector {
   private client: UnityFeed;
@@ -8,7 +7,7 @@ class DataCollector {
     this.client = new UnityFeed();
   }
 
-  public fetch(processData: FeedStorage|null = null): void {
+  public fetch(processData: FeedStorage): void {
     let chunk: string = '';
     let stack: number = 0;
 
@@ -28,26 +27,10 @@ class DataCollector {
           let chunkJson = JSON.parse(chunk);
 
           chunk = '';
-
-          if (processData) {
-            processData(chunkJson);
-          } else {
-            this.processData(chunkJson);
-          }
+          processData(chunkJson);
         }
       }
     });
-  }
-
-  private processData(chunk: FeedChunk): void {
-    switch (chunk.type) {
-      case 'MATCH_INSERT':
-        chunk.match.forEach((match: UMatch) => {
-          matchInsert(match);
-        });
-
-        break;
-    }
   }
 }
 
