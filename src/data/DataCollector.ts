@@ -1,13 +1,14 @@
-import UnityFeed from '../unity/UnityFeed';
+import UnityFeed from '../connectors/UnityFeed';
+import { matchInsert } from '../controllers/SportbookStorage';
 
 class DataCollector {
   private client: UnityFeed;
 
-  constructor(client: UnityFeed) {
-    this.client = client;
+  constructor() {
+    this.client = new UnityFeed();
   }
 
-  public fetch(saveChunk: feedStorage): void {
+  public fetch(processData: FeedStorage|null = null): void {
     let chunk: string = '';
     let stack: number = 0;
 
@@ -24,11 +25,29 @@ class DataCollector {
         chunk += symb;
 
         if (stack <= 0) {
-          saveChunk(JSON.parse(chunk));
+          let chunkJson = JSON.parse(chunk);
+
           chunk = '';
+
+          if (processData) {
+            processData(chunkJson);
+          } else {
+            this.processData(chunkJson);
+          }
         }
       }
     });
+  }
+
+  private processData(chunk: FeedChunk): void {
+    switch (chunk.type) {
+      case 'MATCH_INSERT':
+        chunk.match.forEach((match: UMatch) => {
+          matchInsert(match);
+        });
+
+        break;
+    }
   }
 }
 

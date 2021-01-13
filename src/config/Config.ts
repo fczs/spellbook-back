@@ -11,4 +11,10 @@ const unity: EnvObject = {
   port: process.env.UNITY_PORT
 }
 
-export { app, unity };
+const db: EnvObject = {
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  name: process.env.DB_NAME
+}
+
+export { app, unity, db };
