@@ -13,3 +13,21 @@ export function checkJson(str: string): boolean {
       .replace(/(?:^|:|,)(?:\s*\[)+/g, '')
   );
 }
+
+export function printMatchAction(match: UMatch, action: string): void {
+  let color = '';
+
+  switch (action) {
+    case 'ADDED':
+      color = '32';
+      break;
+    case 'UPDATED':
+      color = '34';
+      break;
+    case 'DELETED':
+      color = '31';
+      break;
+  }
+
+  console.log(`${match.sportType}: ${match.host} - ${match.guest} -> \x1b[${color}m${action}\x1b[0m`);
+}

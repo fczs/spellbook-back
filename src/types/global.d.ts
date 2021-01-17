@@ -10,7 +10,7 @@ type StringObject = {
 };
 
 type MixedObject = {
-  [index: string]: string | number;
+  [index: string]: any;
 }
 
 type EnvObject = {

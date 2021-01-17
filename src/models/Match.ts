@@ -8,7 +8,7 @@ const Match: Schema = new Schema(
   {
     unity_id: { type: String, required: true, unique: true },
     sportType: { type: String, required: true },
-    startTime: { type: String, required: true },
+    startTime: { type: Number, required: true },
     league: { type: String, required: false },
     host: { type: String, required: false },
     guest: { type: String, required: false },

@@ -5,7 +5,8 @@ dotenv.config();
 const app: EnvObject = {
   port: process.env.PORT,
   root: process.env.PWD,
-  logs: process.env.PWD + '/logs/'
+  logs: process.env.PWD + '/logs/',
+  feed: process.env.PWD + '/feed/'
 }
 
 const unity: EnvObject = {

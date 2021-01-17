@@ -5,21 +5,21 @@ import cors from 'cors';
 import db from './connectors/MongoConnector';
 import DataCollector from './data/DataCollector';
 import { app as conf } from './config/Config';
-import { chunkHandler } from './controllers/SportbookStorage';
 
 const app = express();
 const collector = new DataCollector();
 
-collector.fetch(chunkHandler);
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+collector.fetch(collector.chunkHandler);
 
+/*
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 app.use(bodyParser.json());
-
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.get('/', (req, res) => {
   res.send('Running...');
 });
 
 app.listen(conf.port, () => console.log(`Server running on port ${conf.port}`));
+*/

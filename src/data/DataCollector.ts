@@ -1,10 +1,13 @@
 import UnityFeed from '../connectors/UnityFeed';
+import SportbookStorage from '../controllers/SportbookStorage';
 
 class DataCollector {
   private client: UnityFeed;
+  private storage: SportbookStorage;
 
   constructor() {
     this.client = new UnityFeed();
+    this.storage = new SportbookStorage();
   }
 
   public fetch(processData: FeedStorage): void {
@@ -31,6 +34,22 @@ class DataCollector {
         }
       }
     });
+  }
+
+  public chunkHandler = (chunk: FeedChunk): void => {
+    let fn: ChunkFunctions = chunk.type.toLowerCase();
+
+    if (typeof this.storage[fn] === 'function') {
+      let list: string = Object.keys(chunk).filter(
+        (prop: string) => prop !== 'type'
+      )[0];
+
+      for (let item of chunk[list]) {
+        this.storage[fn](item);
+      }
+    } /*else {
+      new Logger().error(`Unknown chunk type: ${chunk.type}`);
+    }*/
   }
 }
 
