@@ -36,21 +36,19 @@ class DataCollector {
     });
   }
 
+  /**
+   * Only chunk types with declared SportbookStorage methods are handled.
+   * The rest are skipped. We have to declare methods for them to be supported.
+   *
+   * @param {FeedChunk} chunk
+   */
   public chunkHandler = (chunk: FeedChunk): void => {
     let fn: ChunkFunctions = chunk.type.toLowerCase();
 
     if (typeof this.storage[fn] === 'function') {
-      let list: string = Object.keys(chunk).filter(
-        (prop: string) => prop !== 'type'
-      )[0];
-
-      for (let item of chunk[list]) {
-        this.storage[fn](item);
-      }
-    } /*else {
-      new Logger().error(`Unknown chunk type: ${chunk.type}`);
-    }*/
-  }
+      this.storage[fn](chunk);
+    }
+  };
 }
 
 export default DataCollector;

@@ -10,5 +10,5 @@ export function saveJson(filePath: string, data: object, flag: string = 'a'): vo
 }
 
 export function saveChunk(chunk: FeedChunk): void {
-  saveJson((app.feed || '') + chunk.type.toLowerCase() + '.json', chunk, 'w');
+  saveJson((app.feed || '') + chunk.type.toLowerCase() + '.json', chunk, 'a');
 }
