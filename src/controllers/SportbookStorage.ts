@@ -1,6 +1,5 @@
-import Match, { IMatch } from '../models/Match';
-import Odd, { IOdd } from '../models/Odd';
-import Logger from '../utils/Logger';
+import Match from '../models/Match';
+import Odd from '../models/Odd';
 import { error, printAction } from '../utils/Utils';
 
 class SportbookStorage implements ISportbook {
@@ -42,90 +41,81 @@ class SportbookStorage implements ISportbook {
       match['matchId'] = match['id'];
     }
 
-    Match.insertMany(chunk.match, {}, (err) => {
+    Match.insertMany(chunk.match, undefined, (err, res) => {
       if (err) {
         error(err.message);
       } else {
-        printAction('Matches', 'insert');
+        printAction(`Matches (${chunk.match.length})`, 'insert');
       }
     });
-    /*new Match(match)
-      .save()
-      .then(() => printMatchAction(match, 'insert'))
-      .catch(error);*/
-  }
-  /*
-  public match_update(match: UMatch): void {
-    Match.findOne({ matchId: match.id }, (err: Error, entry: IMatch) => {
-      if (err) {
-        new Logger().error(
-          `Error on update Match ID ${match.id}: ${err.message}`
-        );
-      }
-
-      Object.keys(match).forEach((key: string) => {
-        if (key !== 'id') {
-          entry[key as keyof IMatch] = match[key as keyof UMatch];
-        }
-      });
-
-      entry
-        .save()
-        .then(() => printMatchAction(match, 'update'))
-        .catch(error);
-    });
   }
 
-  public match_delete(match: UMatch): void {
-    Match.findOneAndDelete({ matchId: match.id })
-      .then(() => printMatchAction(match, 'delete'))
-      .catch(error);
+  public async match_update(chunk: FeedChunk): Promise<void> {
+    let i = 0;
+
+    for (let match of chunk.match) {
+      let res = await Match.updateOne({ matchId: match['id'] }, { match });
+
+      i += res.nModified;
+    }
+
+    printAction(`Matches (${i})`, 'update');
   }
-*/
-  public odd_insert(chunk: FeedChunk): void {
+
+  public async match_delete(chunk: FeedChunk): Promise<void> {
+    let i = 0;
+
+    for (let match of chunk.match) {
+      let res = await Match.deleteOne({ matchId: match['id'] });
+
+      i += res.nModified;
+    }
+
+    printAction(`Matches (${i})`, 'delete');
+  }
+
+  public async odd_insert(chunk: FeedChunk): Promise<void> {
     chunk['record'].forEach((odd: Extract<TFeedArrayTypes, UOdd>) => {
-      odd.oddId = `${odd.source}-${odd.matchId}-${odd.id}`;
+      odd.oddId = this.getOddId(odd);
     });
 
-    Odd.insertMany(chunk['record'], {}, (err) => {
+    Odd.insertMany(chunk['record'], undefined, (err, res) => {
       if (err) {
-        error(err.message);
+        console.error(err.message);
       } else {
-        printAction('Odds', 'insert');
+        printAction(`Odds (${chunk['record'].length})`, 'insert');
       }
-    });
-
-    /*odd.oddId = odd.id;
-    new Odd(odd)
-      .save()
-      .then(() => printOddAction(odd, 'insert'))
-      .catch(error);*/
-  }
-  /*
-  public odd_update(odd: UOdd): void {
-    Odd.findOne({ oddId: odd.id }, (err: Error, entry: IOdd) => {
-      if (err) {
-        new Logger().error(`Error on update Odd ID ${odd.id}: ${err.message}`);
-      }
-
-      Object.keys(odd).forEach((key: string) => {
-        if (key !== 'id') {
-          entry[key as keyof IOdd] = odd[key as keyof UOdd];
-        }
-      });
-
-      entry
-        .save()
-        .then(() => printOddAction(odd, 'update'))
-        .catch(error);
     });
   }
 
-  public odd_delete(odd: UOdd): void {
-    Match.findOneAndDelete({ oddId: odd.id })
-      .then(() => printOddAction(odd, 'delete'))
-      .catch(error);
-  }*/
+  public async odd_update(chunk: FeedChunk): Promise<void> {
+    let i = 0;
+
+    chunk['record'].forEach(async (odd: Extract<TFeedArrayTypes, UOdd>) => {
+      let res = await Odd.updateOne({ oddId: this.getOddId(odd) }, { odd });
+
+      i += res.nModified;
+      console.log(i)
+    });
+
+    printAction(`Odds (${i})`, 'update');
+  }
+
+  public async odd_delete(chunk: FeedChunk): Promise<void> {
+    let i = 0;
+
+    chunk['record'].forEach(async (odd: Extract<TFeedArrayTypes, UOdd>) => {
+      let res = await Odd.deleteOne({ oddId: this.getOddId(odd) });
+
+      i += res.nModified;
+    });
+
+    printAction(`Odds (${i})`, 'delete');
+  }
+
+  private getOddId(odd: UOdd): string {
+    return `${odd.source}-${odd.matchId}-${odd.id}`;
+  }
 }
 
 export default SportbookStorage;

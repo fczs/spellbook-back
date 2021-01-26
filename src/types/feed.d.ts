@@ -69,9 +69,9 @@ interface ISportbook {
   reset(chunk: FeedChunk): void;
   refresh(chunk: FeedChunk): void;
   match_insert(chunk: FeedChunk): void;
-  /*match_update(chunk: FeedChunk): void;
+  match_update(chunk: FeedChunk): void;
   match_delete(chunk: FeedChunk): void;
   odd_insert(chunk: FeedChunk): void;
   odd_update(chunk: FeedChunk): void;
-  odd_delete(chunk: FeedChunk): void;*/
+  odd_delete(chunk: FeedChunk): void;
 }
